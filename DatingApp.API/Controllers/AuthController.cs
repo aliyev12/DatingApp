@@ -116,3 +116,10 @@ LOGIN logic
     10) Create token - it will contain JWT token that gets returned to client;
     11) Return token to client in a form of a new object, usign WriteToken() serializing method to write token to HTTP response.
 */
+
+/*
+AUTHORIZARION
+
+    1) Add Microsoft.AspNetCore.Authentication.JwtBearer package;
+
+*/
