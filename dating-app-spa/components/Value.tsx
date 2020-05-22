@@ -26,7 +26,6 @@ const Value = (props: Props) => {
   return (
     <div>
       Values
-      {console.log("values = ", values)}
       <ul>
         {values.map((val: Value): any => (
           <li key={val.Id}>{val.name}</li>

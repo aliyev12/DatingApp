@@ -48,6 +48,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
+            // throw new Exception("Computer says no!");
             // Invoke repository's Login method and get back the user from repository
             // making sure that username and password that user provided match whatever is stored for that user in the DB
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
@@ -63,13 +64,13 @@ namespace DatingApp.API.Controllers
                 new Claim(ClaimTypes.Name, userFromRepo.Username)
             };
 
+            // Get secret token from appsettings.json -> AppSettings -> Token
+            var secretKey = _config.GetSection("AppSettings:Token").Value;
+            // Encode string with ASCI char codes (e.g. a -> 97, etc)
+            var encodedSecretKey = Encoding.UTF8.GetBytes(secretKey);
+
             // Build hashed key for JWT signature, using secret token stored in appsettings.json
-            var key = new SymmetricSecurityKey(
-                // Encode string with ASCI char codes (e.g. a -> 97, etc)
-                Encoding.UTF8.GetBytes(
-                    // Get secret token from appsettings.json -> AppSettings -> Token
-                    _config.GetSection("AppSettings:Token").Value)
-                    );
+            var key = new SymmetricSecurityKey(encodedSecretKey);
 
             // Generate signing credentials based on key
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
@@ -86,7 +87,16 @@ namespace DatingApp.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
 
             // Create token - it will contain JWT token that gets returned to client
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            SecurityToken token;
+            try
+            {
+                token = tokenHandler.CreateToken(tokenDescriptor);
+            }
+            catch (System.Exception)
+            {
+                throw new Exception("Security keys did not match.");
+            }
+
 
             // Return token to client in a form of a new object, usign WriteToken method to write token to response
             return Ok(new
