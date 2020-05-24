@@ -25,7 +25,7 @@ export const LoginSchema = Yup.object().shape({
 export const EditProfileSchema = Yup.object().shape({
   introduction: Yup.string(),
   lookingFor: Yup.string(),
-  interests: Yup.string(),
+  interest: Yup.string(),
   city: Yup.string(),
   country: Yup.string(),
 });

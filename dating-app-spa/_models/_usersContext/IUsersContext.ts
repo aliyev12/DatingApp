@@ -11,7 +11,7 @@ export interface IUsersContextState {}
 export interface IEditUserValues {
   introduction: string;
   lookingFor: string;
-  interests: string;
+  interest: string;
   city: string;
   country: string;
 }

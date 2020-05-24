@@ -11,7 +11,7 @@ export interface IUser {
   photoUrl: string;
   city: string;
   country: string;
-  interests?: string;
+  interest?: string;
   introduction?: string;
   lookingFor?: string;
   photos?: IPhoto[];

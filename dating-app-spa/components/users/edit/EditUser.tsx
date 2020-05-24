@@ -12,11 +12,14 @@ import EditHeading from "./EditHeading";
 import Textarea from "./Textarea";
 import LocationDetails from "./LocationDetails";
 import { ToastContainer, toast } from "react-toastify";
+import API, { AxiosRequestConfig } from "../../../utils/API";
+
+// import { UsersContext } from "../../../contexts";
+import { updateUser } from "../../../contexts";
 
 export const EditUser = ({ id }: { id: string }) => {
+  // const { updateUser } = React.useContext(UsersContext);
   const { user } = useUser(id);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-
   React.useEffect(() => {
     window.addEventListener("beforeunload", () => msg);
     return () => window.addEventListener("beforeunload", () => {});
@@ -26,16 +29,22 @@ export const EditUser = ({ id }: { id: string }) => {
     values: IEditUserValues,
     yupProps: FormikProps<IEditUserValues>
   ) => {
-    // const regStatus = await register(values);
-    // setErrorState(regStatus);
-    console.log("in handleEditUser");
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-    }, 5000);
-    toast.success("Your information has been successfully updates.");
-
-    yupProps.resetForm();
+    yupProps.setSubmitting(true);
+    try {
+      const options: AxiosRequestConfig = {
+        method: "PUT",
+        url: `/users/${id}`,
+        data: values,
+      };
+      await API(options);
+      toast.success("Your information has been successfully updates.");
+      yupProps.resetForm({ values: values });
+    } catch (err) {
+      let errMsg = "Something went wrong";
+      if (err.response.data && err.response.data.title)
+        errMsg = err.response.data.title;
+      toast.error(errMsg);
+    }
     yupProps.setSubmitting(false);
   };
 
@@ -45,7 +54,7 @@ export const EditUser = ({ id }: { id: string }) => {
       initialValues={{
         introduction: user.introduction ? user.introduction : "",
         lookingFor: user.lookingFor ? user.lookingFor : "",
-        interests: user.interests ? user.interests : "",
+        interest: user.interest ? user.interest : "",
         city: user.city ? user.city : "",
         country: user.country ? user.country : "",
       }}
@@ -56,7 +65,6 @@ export const EditUser = ({ id }: { id: string }) => {
         return (
           <Container className="mt-4">
             {yupProps.dirty && <EditHeading alertType="info" />}
-            {isSubmitted && <EditHeading alertType="success" />}
             <ToastContainer />
             <Row>
               <EditUserCard
@@ -87,7 +95,7 @@ export const EditUser = ({ id }: { id: string }) => {
                         />
                         <Textarea
                           yupProps={yupProps}
-                          name="interests"
+                          name="interest"
                           title="Interests"
                         />
                         <LocationDetails yupProps={yupProps} />
@@ -110,18 +118,3 @@ export const EditUser = ({ id }: { id: string }) => {
 const TabPanel = styled.div``;
 
 const msg = "Changes you made may not be saved.";
-
-// const [alertState, setAlertState] = React.useState({
-//   display: false,
-//   variant: "",
-//   type: "",
-//   message: "",
-// });
-// const [editProfileStatus, setEditProfileStatus] = React.useState<
-//   IEditUserStatus
-// >({
-//   status: MessageStatus.None,
-//   multipleMessages: false,
-//   message: "",
-//   messages: {},
-// });

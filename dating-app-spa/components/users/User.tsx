@@ -84,9 +84,9 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
                 <h4>Looking For</h4>
                 <p>{user?.lookingFor}</p>
               </Tab>
-              <Tab eventKey="interests" title="Interests">
+              <Tab eventKey="interest" title="Interests">
                 <h4>Interests</h4>
-                <p>{user?.interests}</p>
+                <p>{user?.interest}</p>
               </Tab>
               <Tab eventKey="photos" title="Photos" className="photos-tab">
                 <Gallery photos={user.photos} />
