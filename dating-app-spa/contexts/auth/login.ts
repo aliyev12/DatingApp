@@ -1,34 +1,24 @@
-import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
-
-export interface ILoginValues {
-  username: string;
-  password: string;
-}
-
-export interface ILoginStatus {
-  status: string;
-  message?: string | null;
-  token?: string | null;
-}
+import { ILoginValues, ILoginStatus } from "../../_models";
+import API, {
+  AxiosResponse,
+  AxiosRequestConfig,
+  AxiosError,
+} from "../../utils/API";
 
 export async function login(values: ILoginValues): Promise<ILoginStatus> {
-  console.log("arguments = ", arguments);
   let loginStatus: ILoginStatus = {
     status: "fail",
     message: "Something went wrong.",
     token: null,
   };
-  const baseUrl = "http://localhost:5000/api/auth/";
-  console.log("env = ", process.env);
 
   const options: AxiosRequestConfig = {
     method: "POST",
-    url: `${baseUrl}login`,
-    //   headers: { "content-type": "application/x-www-form-urlencoded" },
+    url: `/auth/login`,
     data: values,
   };
 
-  const user: void | AxiosResponse<{ token: string }> = await axios(
+  const user: void | AxiosResponse<{ token: string }> = await API(
     options
   ).catch((err: AxiosError) => {
     const headerError = err.response?.headers["application-error"];

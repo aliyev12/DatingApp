@@ -9,19 +9,8 @@ interface Props {
 }
 
 const ErrorPopover = ({ targetRef, showPopover, message }: Props) => {
-  // const [popoverTarget, setPopoverTarget] = React.useState(null);
-
-  // const ref = React.useRef(null);
-  // const loginBtn = React.useRef(null);
-
   return (
-    <Overlay
-      show={showPopover}
-      target={targetRef}
-      placement="bottom"
-      // container={ref.current}
-      // containerPadding={20}
-    >
+    <Overlay show={showPopover} target={targetRef} placement="bottom">
       <Popover id="popover-contained" className="bg-danger">
         <Popover.Content>{message}</Popover.Content>
       </Popover>

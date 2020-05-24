@@ -2,44 +2,16 @@ import React from "react";
 import { Form, FormControl, Button, InputGroup, Alert } from "react-bootstrap";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Formik } from "formik";
-import * as Yup from "yup";
-import getConfig from "next/config";
-
-import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
 import Router from "next/router";
+import { RegisterSchema } from "../utils/validationSchemas";
+import {
+  IRegistrationStatus,
+  MessageStatus,
+  IRegisterValues,
+} from "../_models";
+import { register } from "../contexts/auth/register";
 
-type RegisterData = {
-  username: string;
-  password: string;
-};
-
-enum MessageStatus {
-  Error,
-  Success,
-  None,
-}
-
-interface IRegistrationStatus {
-  status: MessageStatus;
-  multipleMessages: boolean;
-  message: string;
-  messages: { [key: string]: string[] };
-}
-
-const RegisterSchema = Yup.object().shape({
-  username: Yup.string(),
-  // .min(1, "Too Short!")
-  // .max(50, "Too Long!")
-  // .required("Required"),
-  password: Yup.string(),
-  // .min(1, "Too Short!")
-  // .max(50, "Too Long!")
-  // .required("Required"),
-});
-
-interface Props {}
-
-const Register = (props: Props) => {
+const Register = () => {
   const [showPass, setShowPass] = React.useState(false);
   const [registrationStatus, setErrorState] = React.useState<
     IRegistrationStatus
@@ -50,65 +22,20 @@ const Register = (props: Props) => {
     messages: {},
   });
 
-  const register = async (values: RegisterData) => {
-    const { publicRuntimeConfig: config } = getConfig();
-    const baseUrl = config.baseUrlAuth;
-    const data = values;
-    const options: AxiosRequestConfig = {
-      method: "POST",
-      url: `${baseUrl}register`,
-      data,
-    };
-
-    const user: void | AxiosResponse<{ token: string }> = await axios(
-      options
-    ).catch((err: AxiosError) => {
-      console.log("Register error: ", err);
-      console.dir(err);
-      const headerError = err.response?.headers["application-error"];
-      console.log("Header error = ", headerError);
-
-      let newErrorState: IRegistrationStatus;
-      if (err.response?.data.errors) {
-        newErrorState = {
-          ...registrationStatus,
-          status: MessageStatus.Error,
-          multipleMessages: true,
-          messages: err.response?.data.errors,
-        };
-      } else {
-        newErrorState = {
-          ...registrationStatus,
-          status: MessageStatus.Error,
-          multipleMessages: false,
-          message: err.response?.data,
-        };
-      }
-
-      setErrorState(newErrorState);
-    });
-
-    if (user) {
-      console.log("user = ", user);
-      setErrorState({
-        ...registrationStatus,
-        status: MessageStatus.Success,
-        message: `Welcome to Dating App ${values.username}! You have been successfully registered.`,
-      });
-      //   localStorage.setItem("token", user.data.token);
-      //   handleLoggedIn();
-    }
+  const handleRegistration = async (
+    values: IRegisterValues,
+    { setSubmitting }: any
+  ) => {
+    const regStatus = await register(values);
+    setErrorState(regStatus);
+    setSubmitting(false);
   };
 
   return (
     <Formik
       initialValues={{ username: "", password: "" }}
       validationSchema={RegisterSchema}
-      onSubmit={async (values, { setSubmitting }) => {
-        await register(values);
-
-        setSubmitting(false);
-      }}
+      onSubmit={handleRegistration}
     >
       {(yupProps) => {
         const {

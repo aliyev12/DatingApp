@@ -8,56 +8,45 @@ import {
 } from "react-bootstrap";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Formik } from "formik";
-import * as Yup from "yup";
-import { UserContext } from "../../../contexts/UserContext";
-import { ILoginStatus } from "../../../contexts/login";
+import { AuthContext } from "../../../contexts";
 import ErrorPopover from "./ErrorPopover";
+import { LoginSchema } from "../../../utils/validationSchemas";
+import { ILoginStatus, ILoginValues } from "../../../_models";
 
-const LoginSchema = Yup.object().shape({
-  username: Yup.string()
-    .min(1, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  password: Yup.string()
-    .min(1, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-});
-
-interface Props {}
-
-const LoginNavForm = (props: Props) => {
+const LoginNavForm = () => {
   const [showPass, setShowPass] = React.useState(false);
   const [errorPopover, setErrorPopover] = React.useState({
     show: false,
     message: "",
   });
-  const userContextValues = React.useContext(UserContext);
+  const userContextValues = React.useContext(AuthContext);
   const { handleLoggedIn, login } = userContextValues;
   const loginBtnRef = React.useRef(null);
+
+  const handleLogin = async (values: ILoginValues, { setSubmitting }: any) => {
+    await login(values).then((res: ILoginStatus) => {
+      if (res.status === "success" && res.token) handleLoggedIn(res.token);
+      if (res.status === "fail" && res.message) {
+        setErrorPopover({
+          show: true,
+          message: res.message,
+        });
+        setTimeout(() => {
+          setErrorPopover({
+            show: false,
+            message: "",
+          });
+        }, 10000);
+      }
+    });
+    setSubmitting(false);
+  };
 
   return (
     <Formik
       initialValues={{ username: "", password: "" }}
       validationSchema={LoginSchema}
-      onSubmit={async (values, { setSubmitting, setTouched }) => {
-        await login(values).then((res: ILoginStatus) => {
-          if (res.status === "success" && res.token) handleLoggedIn(res.token);
-          if (res.status === "fail" && res.message) {
-            setErrorPopover({
-              show: true,
-              message: res.message,
-            });
-            setTimeout(() => {
-              setErrorPopover({
-                show: false,
-                message: "",
-              });
-            }, 10000);
-          }
-        });
-        setSubmitting(false);
-      }}
+      onSubmit={handleLogin}
     >
       {(yupProps) => {
         const {

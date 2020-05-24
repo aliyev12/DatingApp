@@ -63,3 +63,44 @@ Snippet for NEXT JSON Generator site at https://next.json-generator.com
   }
  } 
 ]
+
+
+
+
+
+===========
+My Snippet for JSON Generator site at https://www.json-generator.com/
+===========
+
+
+
+[
+  '{{repeat(10)}}',
+  {
+    Username: '{{firstName("male")}}',
+    Email: '{{email([random])}}',
+    Name: function (tags, index) {return this.Username + ' ' + tags.surname();},
+    Gender: 'female',
+    DateOfBirth: '{{date(new Date(1950,0,1), new Date(1999, 11, 31), "YYYY-MM-dd")}}',
+    Password: 'password',
+    KnownAs: function(){ return this.Username; },
+    Created: '{{date(new Date(2017,0,1), new Date(2017, 7, 31), "YYYY-MM-dd")}}',
+    LastActive: function(){return this.Created; },
+    Introduction: '{{lorem(1, "paragraphs")}}',
+    LookingFor: '{{lorem(1, "paragraphs")}}',
+    Interests: '{{lorem(1, "sentences")}}',
+    City: '{{city()}}',
+    Country: '{{country()}}',
+    Photos: [
+        {
+          url: function(num, index) {
+            var number = num.currentIndex + 1;
+            if (num.currentIndex === 9) number = 1;
+          return 'https://randomuser.me/api/portraits/lego/' + number + '.jpg';
+        },
+        isMain: true,
+        description: '{{lorem()}}'
+      }
+    ]
+  }
+]

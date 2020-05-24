@@ -6,16 +6,13 @@ import {
   Container,
 } from "react-bootstrap";
 import Link from "next/link";
+import styled from "styled-components";
 import { FaUser, FaSignOutAlt } from "react-icons/fa";
 import LoginNavForm from "./LoginNavForm";
-import styled from "styled-components";
-import jwtDecode from "jwt-decode";
-import { UserContext } from "../../../contexts/UserContext";
+import { AuthContext } from "../../../contexts";
 
-interface Props {}
-
-const NavbarComponent = (props: Props) => {
-  const { isLoggedIn, logout, user } = React.useContext(UserContext);
+const NavbarComponent = () => {
+  const { isLoggedIn, logout, user } = React.useContext(AuthContext);
 
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
@@ -56,9 +53,11 @@ const NavbarComponent = (props: Props) => {
                 title={`Welcome ${user ? user.unique_name : ""}`}
                 id="basic-nav-dropdown"
               >
-                <NavDropdown.Item href="#">
-                  <FaUser /> Edit Profile
-                </NavDropdown.Item>
+                <Link href="/member/edit">
+                  <a className="dropdown-item">
+                    <FaUser /> Edit Profile
+                  </a>
+                </Link>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={() => logout()}>
                   <FaSignOutAlt /> Logout

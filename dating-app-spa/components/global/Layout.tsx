@@ -1,9 +1,9 @@
 import * as React from "react";
-import Link from "next/link";
 import Head from "next/head";
-import Navbar from "./navbar/Navbar";
 import { Container } from "react-bootstrap";
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
+import Navbar from "./navbar/Navbar";
+import { customTabsStyles } from "../../utils/customTabsStyles";
 
 type Props = {
   title?: string;
@@ -43,5 +43,7 @@ const GlobalStyle = createGlobalStyle`
   html {
     font-size: 62.5%;
     box-sizing: border-box;
+
+    ${customTabsStyles}
   }
 `;
