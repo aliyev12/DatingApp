@@ -35,9 +35,8 @@ export const Gallery: React.FunctionComponent<Props> = ({ photos }: Props) => {
     if (!photos) return null;
 
     return photos.map((photo, i) => {
-      const calcWidth = photos.length < 3 ? Math.ceil(100 / 3) : 100;
-      const styles = {
-        width: type === "main" ? 500 : `${calcWidth}%`,
+      const styles: React.CSSProperties = {
+        width: type === "main" ? 500 : 166.67,
         height: type === "main" ? 500 : 160,
         filter:
           type === "main"
@@ -47,6 +46,11 @@ export const Gallery: React.FunctionComponent<Props> = ({ photos }: Props) => {
             : `opacity(0.5)`,
         transition: `filter 300ms ease`,
       };
+
+      if (type === "thumbnails" && photos.length === 2) {
+        styles.marginLeft = "auto";
+        styles.marginRight = "auto";
+      }
 
       return (
         <div>

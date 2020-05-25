@@ -16,6 +16,7 @@ import API, { AxiosRequestConfig } from "../../../utils/API";
 
 // import { UsersContext } from "../../../contexts";
 import { updateUser } from "../../../contexts";
+import PhotoEditor from "./PhotoEditor";
 
 export const EditUser = ({ id }: { id: string }) => {
   // const { updateUser } = React.useContext(UsersContext);
@@ -102,7 +103,7 @@ export const EditUser = ({ id }: { id: string }) => {
                       </Form>
                     </Tab>
                     <Tab eventKey="photos" title="Edit Photos">
-                      <p>photo edit goes here...</p>
+                      <PhotoEditor photos={user.photos} />
                     </Tab>
                   </Tabs>
                 </TabPanel>
