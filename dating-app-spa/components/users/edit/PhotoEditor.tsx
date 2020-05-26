@@ -1,13 +1,5 @@
-import React, { ChangeEvent } from "react";
-import {
-  Row as _Row,
-  Col,
-  Button,
-  Form,
-  CardDeck,
-  Card,
-  CardColumns as _CardColumns,
-} from "react-bootstrap";
+import React from "react";
+import { Row as _Row, Col, Card } from "react-bootstrap";
 import { FaTrash, FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { IPhoto } from "../../../_models";
 import styled from "styled-components";
@@ -45,7 +37,7 @@ const PhotoEditor = ({ photos }: Props) => {
           const isMain = mainPhotoId === photo.id;
           return (
             <Col sm={2} key={photo.id}>
-              <Card border={isMain ? "success" : "default"} className="mb-4">
+              <Card border={isMain ? "success" : undefined} className="mb-4">
                 <Card.Img variant="top" src={photo.url} />
                 <Card.Footer className="d-flex justify-content-between">
                   <button

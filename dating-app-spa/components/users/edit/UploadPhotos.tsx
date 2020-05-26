@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, AlertProps, Row } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
 import AddPhotos from "./AddPhotos";
 import { Container } from "./Container";
@@ -8,67 +8,16 @@ import UploadQueue from "./UploadQueue";
 import { uploadFiles } from "./uploadFiles";
 import { AuthContext } from "../../../contexts";
 import { IUserContextValues } from "../../../_models";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
 
-interface Props {}
-
-const UploadPhotos = (props: Props) => {
+const UploadPhotos = () => {
   const { user, addUploadedUserPhotos }: IUserContextValues = React.useContext(
     AuthContext
   );
   const [files, setFiles] = React.useState<(File & { preview: string })[]>([]);
   const [progress, setProgress] = React.useState(0);
   const [cancelToken, setCancelToken] = React.useState(null);
-
-  React.useEffect(() => {
-    console.log("progress = ", progress);
-  }, [progress]);
-  const [alertState, setAlertState] = React.useState<{
-    display: boolean;
-    alert: {
-      variant: AlertProps["variant"];
-      msg: string;
-    };
-  }>({
-    display: false,
-    alert: {
-      variant: undefined,
-      msg: "",
-    },
-  });
-
-  const handleAlert = (type: string) => {
-    const alertMessages: any = {
-      tooManyFiles: {
-        variant: "danger",
-        msg:
-          "You tried uploading too many files. The limit is 3 files at a time.",
-      },
-      uploadCancelled: {
-        variant: "info",
-        msg: "Your upload has been cancelled.",
-      },
-      unableCancel: {
-        variant: "danger",
-        msg: "Unable to cancel upload.",
-      },
-    };
-    setAlertState({
-      display: true,
-      alert: alertMessages[type],
-    });
-
-    setTimeout(() => {
-      setAlertState({
-        display: false,
-        alert: {
-          variant: undefined,
-          msg: "",
-        },
-      });
-    }, 5000);
-  };
 
   const dropzoneProps = useDropzone({
     accept: "image/*",
@@ -83,11 +32,12 @@ const UploadPhotos = (props: Props) => {
           })
         );
       } else {
-        handleAlert("tooManyFiles");
+        toast.error(
+          "You tried uploading too many files. The limit is 3 files at a time."
+        );
       }
     },
   });
-  const { open, getRootProps, getInputProps } = dropzoneProps;
 
   React.useEffect(
     () => () => {
@@ -130,26 +80,17 @@ const UploadPhotos = (props: Props) => {
   const handleCancelUpload = () => {
     if (cancelToken && progress < 100) {
       cancelToken.cancel("Request canceled!");
-      handleAlert("uploadCancelled");
+      toast.error("Your upload has been cancelled.");
       toast.info("Your upload has been cancelled.");
       setProgress(0);
     } else {
-      handleAlert("unableCancel");
+      toast.error("Unable to cancel upload.");
       toast.error("Unable to cancel upload.");
     }
-    // axiosSource.cancel("Request canceled!");
-    // stopped at trying to figure out why the screen is so extra wide and need to fix toast positionning...
   };
 
   return (
     <Container className=" mt-5">
-      <Row>
-        {alertState.display ? (
-          <Alert variant={alertState.alert.variant}>
-            {alertState.alert.msg}
-          </Alert>
-        ) : null}
-      </Row>
       <Row>
         <AddPhotos dropzoneProps={dropzoneProps} />
         <UploadQueue
