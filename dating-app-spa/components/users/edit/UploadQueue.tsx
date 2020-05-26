@@ -5,10 +5,22 @@ import { FaTrash, FaUpload, FaBan } from "react-icons/fa";
 interface Props {
   files: (File & { preview: string; path: string })[];
   removeImage: (preview: string) => void;
+  handleUpload: () => void;
+  handleCancelUpload: () => void;
   progress: number;
+  disableUploadBtn: boolean;
+  disableCancelBtn: boolean;
 }
 
-const UploadQueue = ({ files, removeImage, progress }: Props) => {
+const UploadQueue = ({
+  files,
+  removeImage,
+  handleUpload,
+  handleCancelUpload,
+  progress,
+  disableUploadBtn,
+  disableCancelBtn,
+}: Props) => {
   return (
     <Col sm={8}>
       <h2 className="mb-4">Upload Queue</h2>
@@ -52,13 +64,27 @@ const UploadQueue = ({ files, removeImage, progress }: Props) => {
             </tbody>
           </Table>
           <p className="muted mt-5">Queue progress:</p>
-          <ProgressBar animated now={progress} className="mb-5" />
+          <ProgressBar
+            animated={progress < 100}
+            now={progress}
+            variant={progress < 100 ? "primary" : "success"}
+            className="mb-5"
+            label={progress > 0 ? `${progress}%` : ""}
+          />
           <ButtonGroup aria-label="Basic example">
-            <Button variant="success">
+            <Button
+              variant="success"
+              onClick={handleUpload}
+              disabled={disableUploadBtn}
+            >
               <FaUpload className="mr-3" />
               <span>Upload</span>
             </Button>
-            <Button variant="warning">
+            <Button
+              variant="warning"
+              onClick={handleCancelUpload}
+              disabled={disableCancelBtn}
+            >
               <FaBan className="mr-3" />
               <span>Cancel</span>
             </Button>

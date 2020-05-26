@@ -5,13 +5,20 @@ import {
   IUserContextState,
   IUserContextValues,
 } from "../../_models/_authContext/IAuthContext";
-import { handleLoggedIn, logout } from "./userContextMethods";
+import {
+  handleLoggedIn,
+  updateMainPhoto,
+  addUploadedUserPhotos,
+  logout,
+} from "./userContextMethods";
+import userContextMethods from "./userContextMethods";
 
 export const AuthContext = React.createContext({} as IUserContextValues);
 
 export const AuthProvider = ({ children }: any) => {
   const [state, setState] = React.useState<IUserContextState>({
     user: null,
+    userDetails: null,
     isLoggedIn: false,
   });
 
@@ -22,10 +29,13 @@ export const AuthProvider = ({ children }: any) => {
   const value: IUserContextValues = {
     isLoggedIn: state.isLoggedIn,
     user: state.user,
+    userDetails: state.userDetails,
     login,
     register,
     logout: logout.bind(null, state, setState),
     handleLoggedIn: handleLoggedIn.bind(null, state, setState),
+    updateMainPhoto: updateMainPhoto.bind(null, state, setState),
+    addUploadedUserPhotos: addUploadedUserPhotos.bind(null, state, setState),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

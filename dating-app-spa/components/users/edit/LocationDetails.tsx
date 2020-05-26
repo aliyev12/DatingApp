@@ -9,14 +9,14 @@ const LocationDetails = ({ yupProps }: Props) => {
 
   return (
     <>
-      <h4>Location Details</h4>
+      <h4 className="mb-4">Location Details</h4>
       <div className="div form-inline">
-        <label htmlFor="city">
+        <label htmlFor="city" className="mr-5">
           City:
           <input
             type="text"
             name="city"
-            className={`form-control ${
+            className={`form-control ml-3 ${
               errors.city && touched.city ? "border-danger" : ""
             }`}
             onChange={handleChange}
@@ -29,7 +29,7 @@ const LocationDetails = ({ yupProps }: Props) => {
           <input
             type="text"
             name="country"
-            className={`form-control ${
+            className={`form-control  ml-3 ${
               errors.country && touched.country ? "border-danger" : ""
             }`}
             onChange={handleChange}

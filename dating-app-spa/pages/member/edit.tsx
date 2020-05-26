@@ -6,12 +6,13 @@ import { AuthContext } from "../../contexts";
 interface Props {}
 
 const EditMemberPage: React.FunctionComponent<Props> = (props: Props) => {
-  const { isLoggedIn, user } = React.useContext(AuthContext);
+  const { isLoggedIn, user, userDetails } = React.useContext(AuthContext);
 
   if (!user || (user && !user.nameid)) return null;
+  if (!userDetails) return null;
   return (
     <Layout title="Edit Member">
-      <EditUser id={user.nameid} />
+      <EditUser id={user.nameid} user={userDetails} />
     </Layout>
   );
 };

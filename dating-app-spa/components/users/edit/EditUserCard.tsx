@@ -17,6 +17,7 @@ const EditUserCard = ({
   return (
     <Col sm={4}>
       <Card>
+        {console.log("user from edit user card = ", user)}
         <Card.Img
           src={user?.photoUrl}
           alt={user?.knownAs}

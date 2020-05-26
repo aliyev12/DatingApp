@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { useUser } from "../useUser";
 import { Formik, FormikProps } from "formik";
 import { EditProfileSchema } from "../../../utils/validationSchemas";
-import { IEditUserValues } from "../../../_models";
+import { IEditUserValues, IUser } from "../../../_models";
 import EditUserCard from "./EditUserCard";
 import EditHeading from "./EditHeading";
 import Textarea from "./Textarea";
@@ -18,9 +18,7 @@ import API, { AxiosRequestConfig } from "../../../utils/API";
 import { updateUser } from "../../../contexts";
 import PhotoEditor from "./PhotoEditor";
 
-export const EditUser = ({ id }: { id: string }) => {
-  // const { updateUser } = React.useContext(UsersContext);
-  const { user } = useUser(id);
+export const EditUser = ({ id, user }: { id: string; user: IUser }) => {
   React.useEffect(() => {
     window.addEventListener("beforeunload", () => msg);
     return () => window.addEventListener("beforeunload", () => {});
@@ -82,7 +80,8 @@ export const EditUser = ({ id }: { id: string }) => {
                   >
                     <Tab eventKey="profile" title="Edit Profile">
                       <Form
-                      // onSubmit={yupProps.handleSubmit}
+                        className="m-5"
+                        // onSubmit={yupProps.handleSubmit}
                       >
                         <Textarea
                           yupProps={yupProps}

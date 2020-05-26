@@ -1,5 +1,7 @@
 import { ILoginValues, ILoginStatus } from "./ILogin";
 import { IRegisterValues, IRegistrationStatus } from "./IRegister";
+import { IUser } from "..";
+import { IPhoto } from "../IPhoto";
 
 export interface IToken {
   exp: number;
@@ -12,7 +14,10 @@ export interface IToken {
 export interface IUserContextValues {
   isLoggedIn: boolean;
   handleLoggedIn: (token?: string | undefined) => void;
+  updateMainPhoto: (photoId: number) => void;
+  addUploadedUserPhotos: (photos: IPhoto[]) => void;
   user: IToken | null;
+  userDetails: IUser | null;
   login: (values: ILoginValues) => Promise<ILoginStatus>;
   register: (values: IRegisterValues) => Promise<IRegistrationStatus>;
   logout: () => void;
@@ -21,4 +26,5 @@ export interface IUserContextValues {
 export interface IUserContextState {
   isLoggedIn: boolean;
   user: IToken | null;
+  userDetails: IUser | null;
 }

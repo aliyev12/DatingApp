@@ -44,6 +44,18 @@ const GlobalStyle = createGlobalStyle`
     font-size: 62.5%;
     box-sizing: border-box;
 
+    body {
+      font-size: 1.6rem;
+
+      .btn, .lead, .h5, h5, .dropdown-menu, .form-control {
+        font-size: 1.6rem;
+      }
+
+      .h4, h4 {
+        font-size: 1.8rem;
+      }
+    }
+
     ${customTabsStyles}
   }
 `;

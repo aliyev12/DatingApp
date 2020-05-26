@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Navbar,
+  Navbar as _Navbar,
   Nav,
   NavDropdown as _NavDropdown,
   Container,
@@ -19,7 +19,7 @@ const NavbarComponent = () => {
       <Container>
         <Link href="/">
           <a>
-            <Navbar.Brand>Dating App</Navbar.Brand>
+            <Navbar.Brand className="font">Dating App</Navbar.Brand>
           </a>
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -74,6 +74,12 @@ const NavbarComponent = () => {
 };
 
 export default NavbarComponent;
+
+const Navbar = styled(_Navbar)`
+  .navbar-brand {
+    font-size: 1.8rem;
+  }
+`;
 
 const NavDropdown = styled(_NavDropdown)`
   a#basic-nav-dropdown {

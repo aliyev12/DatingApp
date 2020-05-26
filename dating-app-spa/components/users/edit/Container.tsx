@@ -78,4 +78,8 @@ export const Container = styled.div`
       }
     }
   }
+
+  .progress {
+    height: 2.5rem !important;
+  }
 `;
