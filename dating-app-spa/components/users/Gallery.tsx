@@ -53,8 +53,8 @@ export const Gallery: React.FunctionComponent<Props> = ({ photos }: Props) => {
       }
 
       return (
-        <div>
-          <img key={photo.id} src={photo.url} style={styles} />
+        <div key={photo.id}>
+          <img src={photo.url} style={styles} />
         </div>
       );
     });

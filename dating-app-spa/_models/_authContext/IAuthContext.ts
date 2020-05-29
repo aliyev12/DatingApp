@@ -15,6 +15,7 @@ export interface IUserContextValues {
   isLoggedIn: boolean;
   handleLoggedIn: (token?: string | undefined) => void;
   updateUser: (user: IUser) => void;
+  deletePhoto: (photoId: number) => void;
   addUploadedUserPhotos: (photos: IPhoto[]) => void;
   user: IToken | null;
   userDetails: IUser | null;

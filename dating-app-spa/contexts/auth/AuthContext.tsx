@@ -5,6 +5,7 @@ import { IUserContextState } from "../../_models/_authContext/IAuthContext";
 import { IUserContextValues } from "../../_models/_authContext/IAuthContext";
 import { handleLoggedIn, addUploadedUserPhotos } from "./userContextMethods";
 import { updateUser, logout, login } from "./userContextMethods";
+import { deletePhoto } from "./userContextMethods";
 
 export const AuthContext = React.createContext({} as IUserContextValues);
 
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children }: any) => {
     updateUser: updateUser.bind(null, state, setState),
     handleLoggedIn: handleLoggedIn.bind(null, state, setState),
     addUploadedUserPhotos: addUploadedUserPhotos.bind(null, state, setState),
+    deletePhoto: deletePhoto.bind(null, state, setState),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

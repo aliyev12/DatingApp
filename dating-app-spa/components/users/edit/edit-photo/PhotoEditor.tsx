@@ -7,6 +7,7 @@ import UploadPhotos from "./upload-photos/UploadPhotos";
 import { AuthContext } from "../../../../contexts";
 import API from "../../../../utils/API";
 import { toast } from "react-toastify";
+import { Confirm } from "../../../../utils/Confirm";
 
 interface Props {
   photos: IPhoto[];
@@ -14,8 +15,15 @@ interface Props {
 }
 
 const PhotoEditor = ({ photos, userId }: Props) => {
-  const { updateUser, updateMainPhoto } = React.useContext(AuthContext);
+  const { updateUser, deletePhoto } = React.useContext(AuthContext);
   const [mainPhotoId, setMainPhotoId] = React.useState<number | null>(null);
+  const [confirmation, setConfirmation] = React.useState<{
+    id: number | undefined;
+    show: boolean;
+  }>({
+    id: undefined,
+    show: false,
+  });
 
   React.useEffect(() => {
     const foundPhoto = photos.find((p) => p.isMain);
@@ -25,6 +33,12 @@ const PhotoEditor = ({ photos, userId }: Props) => {
       setMainPhotoId(photos[0].id);
     }
   }, []);
+
+  const hideConfirm = () =>
+    setConfirmation({
+      id: undefined,
+      show: false,
+    });
 
   const handleIsMainChange = async (id: number) => {
     await API.post(`/users/${userId}/photos/${id}/setMain`)
@@ -39,6 +53,20 @@ const PhotoEditor = ({ photos, userId }: Props) => {
       });
   };
 
+  const handleDeletePhoto = async (id: number | undefined) => {
+    if (id) {
+      await API.delete(`/users/${userId}/photos/${id}`)
+        .then((res) => {
+          deletePhoto(id);
+          toast.success("Photo has been successfully deleted.");
+        })
+        .catch((err) => {
+          console.log("err = ", err);
+          toast.error("Error while trying to delete photo.");
+        });
+    }
+  };
+
   if (!mainPhotoId || !photos.length) return null;
   return (
     <>
@@ -47,7 +75,16 @@ const PhotoEditor = ({ photos, userId }: Props) => {
           const isMain = mainPhotoId === photo.id;
           return (
             <Col sm={2} key={photo.id}>
-              <Card border={isMain ? "success" : undefined} className="mb-4">
+              <Card
+                border={
+                  confirmation.id === photo.id
+                    ? "danger"
+                    : isMain
+                    ? "success"
+                    : undefined
+                }
+                className="mb-4"
+              >
                 <Card.Img variant="top" src={photo.url} />
                 <Card.Footer className="d-flex justify-content-between">
                   <button
@@ -62,7 +99,13 @@ const PhotoEditor = ({ photos, userId }: Props) => {
                       {isMain ? <FaToggleOff /> : <FaToggleOn />}
                     </div>
                   </button>
-                  <button className="btn p-0 delete-img-btn text-danger">
+                  <button
+                    className="btn p-0 delete-img-btn text-danger"
+                    onClick={() =>
+                      setConfirmation({ id: photo.id, show: true })
+                    }
+                    disabled={photo.isMain}
+                  >
                     <FaTrash />
                   </button>
                 </Card.Footer>
@@ -72,6 +115,16 @@ const PhotoEditor = ({ photos, userId }: Props) => {
         })}
       </Row>
       <UploadPhotos />
+      <Confirm
+        handleCancel={hideConfirm}
+        handleOk={() => {
+          handleDeletePhoto(confirmation.id);
+          hideConfirm();
+        }}
+        hideConfirm={hideConfirm}
+        showConfirm={confirmation.show}
+        body="Are you sure you want to delete this photo?"
+      />
     </>
   );
 };

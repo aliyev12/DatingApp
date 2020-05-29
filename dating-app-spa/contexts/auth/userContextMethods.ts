@@ -1,8 +1,11 @@
 import { handleToken } from "./handleToken";
-import { getUser } from "..";
 import { IPhoto, ILoginValues, IUser } from "../../_models";
 import API, { AxiosRequestConfig } from "../../utils/API";
 import { toast } from "react-toastify";
+import Router from "next/router";
+
+const updateLS = (user: IUser) =>
+  localStorage.setItem("user", JSON.stringify(user));
 
 // This one will fire when someone still has a valid token in localStorage
 // By opening the site, this function will authenticate user if token is still valid
@@ -31,6 +34,7 @@ export const handleLoggedIn = async (state: any, setState: any) => {
 export function logout(state: any, setState: any): void {
   window.localStorage.removeItem("token");
   window.localStorage.removeItem("user");
+  Router.push("/");
   toast.success("You have been logged out.");
   setState({
     ...state,
@@ -52,6 +56,7 @@ export const updateUser = (
     ...state,
     userDetails: newUserDetails,
   });
+  updateLS(newUserDetails);
 };
 
 // After a photo(s) has/have been uploaded, this will add that photo to client side React.context to that it appears on the screen
@@ -68,6 +73,7 @@ export const addUploadedUserPhotos = (
     ...state,
     userDetails: newUserDetails,
   });
+  updateLS(newUserDetails);
 };
 
 export async function login(state: any, setState: any, values: ILoginValues) {
@@ -83,7 +89,7 @@ export async function login(state: any, setState: any, values: ILoginValues) {
         localStorage.setItem("token", res.data.token);
         const tokenDetails = handleToken(res.data.token);
         if (tokenDetails.tokenIsValid) {
-          localStorage.setItem("user", JSON.stringify(res.data.user));
+          updateLS(res.data.user);
           setState({
             ...state,
             isLoggedIn: tokenDetails.tokenIsValid,
@@ -113,6 +119,19 @@ export async function login(state: any, setState: any, values: ILoginValues) {
       console.dir(err);
     });
 }
+
+export const deletePhoto = (state: any, setState: any, photoId: number) => {
+  const newUserDetails = { ...state.userDetails };
+  newUserDetails.photos = newUserDetails.photos.filter(
+    (p: IPhoto) => p.id !== photoId
+  );
+
+  setState({
+    ...state,
+    userDetails: newUserDetails,
+  });
+  updateLS(newUserDetails);
+};
 
 // export const updateMainPhoto = (state: any, setState: any, photoId: number) => {
 //   const newUserDetails = { ...state.userDetails };

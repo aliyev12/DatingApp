@@ -1,3 +1,4 @@
+export * from "./global/GlobalContext";
 export * from "./auth/AuthContext";
 export * from "./users/UsersContext";
 export * from "./users/getUser";

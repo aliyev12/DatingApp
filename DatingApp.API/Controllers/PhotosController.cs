@@ -122,5 +122,35 @@ namespace DatingApp.API.Controllers
             return BadRequest("Could not set photo to main.");
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePhoto(int userId, int id)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
+
+            var user = await _repo.GetUser(userId);
+
+            if (!user.Photos.Any(p => p.Id == id)) return Unauthorized();
+
+            var photoFromRepo = await _repo.GetPhoto(id);
+
+            if (photoFromRepo.IsMain) return BadRequest("You cannot delete your main photo.");
+
+            // When photos have a PublicId, that means that they are on Cloudinary, in which case, we need to delete the photo from Cloudinary as well as from repository
+            if (photoFromRepo.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photoFromRepo.PublicId);
+
+                var result = _cloudinary.Destroy(deleteParams);
+
+                if (result.Result == "ok") _repo.Delete(photoFromRepo);
+            }
+
+            // If a photo does NOT have a public ID, then it is not on Cloudinary (e.g. from seed data) - so we only need to relete it from repository
+            if (photoFromRepo.PublicId == null) _repo.Delete(photoFromRepo);
+
+            if (await _repo.SaveAll()) return Ok();
+
+            return BadRequest("Failed to delete the photo.");
+        }
     }
 }
