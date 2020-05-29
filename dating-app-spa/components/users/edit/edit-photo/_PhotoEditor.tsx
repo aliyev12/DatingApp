@@ -1,5 +1,5 @@
 import React from "react";
-import { Row as _Row, Col } from "react-bootstrap";
+import { Row as _Row, Col, Card } from "react-bootstrap";
 import { FaTrash, FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { IPhoto } from "../../../../_models";
 import styled from "styled-components";
@@ -8,7 +8,6 @@ import { AuthContext } from "../../../../contexts";
 import API from "../../../../utils/API";
 import { toast } from "react-toastify";
 import { Confirm } from "../../../../utils/Confirm";
-import { ExpandImageModal } from "../../../../utils/ExpandImageModal";
 
 interface Props {
   photos: IPhoto[];
@@ -18,13 +17,6 @@ interface Props {
 const PhotoEditor = ({ photos, userId }: Props) => {
   const { updateUser, deletePhoto } = React.useContext(AuthContext);
   const [mainPhotoId, setMainPhotoId] = React.useState<number | null>(null);
-  const [expandImage, setExpandImage] = React.useState<{
-    imgUrl: string | undefined;
-    show: boolean;
-  }>({
-    imgUrl: undefined,
-    show: false,
-  });
   const [confirmation, setConfirmation] = React.useState<{
     id: number | undefined;
     show: boolean;
@@ -84,22 +76,17 @@ const PhotoEditor = ({ photos, userId }: Props) => {
           return (
             <Col sm={2} key={photo.id}>
               <Card
-                isBeingDeleted={confirmation.id === photo.id}
-                isMain={isMain}
+                border={
+                  confirmation.id === photo.id
+                    ? "danger"
+                    : isMain
+                    ? "success"
+                    : undefined
+                }
+                className="mb-4"
               >
-                <Img
-                  title={photo.description}
-                  style={{
-                    backgroundImage: `url(${photo.url})`,
-                  }}
-                  onClick={() =>
-                    setExpandImage({
-                      imgUrl: photo.url,
-                      show: true,
-                    })
-                  }
-                />
-                <Footer>
+                <Card.Img variant="top" src={photo.url} />
+                <Card.Footer className="d-flex justify-content-between">
                   <button
                     onClick={() => handleIsMainChange(photo.id)}
                     disabled={isMain}
@@ -121,7 +108,7 @@ const PhotoEditor = ({ photos, userId }: Props) => {
                   >
                     <FaTrash />
                   </button>
-                </Footer>
+                </Card.Footer>
               </Card>
             </Col>
           );
@@ -138,63 +125,20 @@ const PhotoEditor = ({ photos, userId }: Props) => {
         showConfirm={confirmation.show}
         body="Are you sure you want to delete this photo?"
       />
-      <ExpandImageModal
-        show={expandImage.show}
-        imgUrl={expandImage.imgUrl}
-        onHide={() =>
-          setExpandImage({
-            imgUrl: undefined,
-            show: false,
-          })
-        }
-      />
     </>
   );
 };
 
 export default PhotoEditor;
 
-const Card = styled.div`
-  height: 10rem;
-  width: 100%;
-  height: 140px;
-  margin-bottom: 2rem;
-  border-radius: 5px;
-  box-shadow: 1px -1px 7px 2px ${({ isBeingDeleted, isMain }) => (isBeingDeleted ? "var(--red)" : isMain ? "var(--green)" : "#1111116e")};
-`;
-const Img = styled.div`
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 100%;
-  height: 100px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  transition: border 300ms ease-in;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--main-color);
+const Row = styled(_Row)`
+  .card-footer {
+    padding: 0 3px;
   }
-`;
-const Footer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 40px;
-  padding: 0 3px;
-
   .main-label {
     font-size: 1rem;
   }
-`;
 
-const DelBtn = styled.button``;
-
-const Row = styled(_Row)`
   .img-container {
     background-position: center;
     height: 100px;

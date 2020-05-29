@@ -22,7 +22,17 @@ const Layout: React.FunctionComponent<Props> = ({
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
     <Navbar />
-    <ToastContainer />
+    <ToastContainer
+      position="top-right"
+      autoClose={50000}
+      hideProgressBar
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss={false}
+      draggable
+      pauseOnHover
+    />
     <Container className="mt-5">{children}</Container>
     <footer>
       <hr />
