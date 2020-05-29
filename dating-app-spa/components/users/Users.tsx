@@ -10,15 +10,17 @@ type Props = {};
 
 const Users: React.FunctionComponent<Props> = () => {
   const authContext = React.useContext(AuthContext);
+  const { isLoggedIn, userDetails } = authContext;
   const [users, setUsers] = React.useState<IUser[] | null>();
 
   React.useEffect(() => {
-    if (authContext.isLoggedIn) initUsers();
+    if (isLoggedIn) initUsers();
   }, [authContext]);
 
   const initUsers = async () => {
     const res = await getUsers();
-    setUsers(res);
+    if (userDetails && userDetails.id)
+      setUsers(res.filter((u) => u.id !== userDetails.id));
   };
 
   if (!users || (users && !users.length)) {

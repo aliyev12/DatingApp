@@ -1,34 +1,45 @@
 import React from "react";
-import { AuthContext, getUser } from "../../contexts";
+import { AuthContext } from "../../contexts";
 import { IUser } from "../../_models";
-import {
-  Container,
-  Col,
-  Row,
-  Card as _Card,
-  Button,
-  Tabs,
-  Tab,
-} from "react-bootstrap";
+import { Container, Card as _Card, Button } from "react-bootstrap";
+import { Col, Row, Tabs, Tab } from "react-bootstrap";
 import styled from "styled-components";
 import { Gallery } from "./Gallery";
 import { useUser } from "./useUser";
+import Router from "next/router";
 
 interface Props {
   id: string;
 }
 
 const User: React.FunctionComponent<Props> = ({ id }: Props) => {
-  const { user } = useUser(id);
-  if (!user) return null;
+  const [user, setUser] = React.useState<IUser | null>();
+  const { userDetails } = React.useContext(AuthContext);
 
+  const isUserOwnProfile = () => userDetails && parseInt(id) === userDetails.id;
+
+  React.useEffect(() => {
+    if (userDetails) {
+      if (isUserOwnProfile()) {
+        setUser(userDetails);
+      } else {
+        const res = useUser(id);
+        setUser(res.user);
+      }
+    }
+  }, [userDetails]);
+
+  if (!user) return null;
   return (
     <Container className="mt-4">
       <Row>
-        <h1>
-          {user.knownAs}
-          {user.knownAs[user.knownAs.length - 1] === "s" ? "'" : "'s"} Profile
-        </h1>
+        <Col sm={4}>
+          <h1>
+            {user.knownAs}
+            {user.knownAs[user.knownAs.length - 1] === "s" ? "'" : "'s"} Profile
+          </h1>
+        </Col>
+        <Col sm={8}></Col>
       </Row>
       <Row>
         <Col sm={4}>
@@ -61,12 +72,24 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
             </Card.Body>
             <Card.Footer>
               <div className="btn-group d-flex">
-                <Button variant="primary" className="w-100">
-                  Like
-                </Button>
-                <Button variant="success" className="w-100">
-                  Message
-                </Button>
+                {isUserOwnProfile() ? (
+                  <Button
+                    variant="warning"
+                    className="btn-block w-100"
+                    onClick={() => Router.push("/member/edit")}
+                  >
+                    Edit Profile
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="primary" className="w-100">
+                      Like
+                    </Button>
+                    <Button variant="success" className="w-100">
+                      Message
+                    </Button>
+                  </>
+                )}
               </div>
             </Card.Footer>
           </Card>
@@ -79,20 +102,26 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
               defaultActiveKey="about"
             >
               <Tab eventKey="about" title={`About ${user?.knownAs}`}>
-                <h4>Description</h4>
-                <p>{user?.introduction}</p>
-                <h4>Looking For</h4>
-                <p>{user?.lookingFor}</p>
+                <div className="m-5">
+                  <h4>Description</h4>
+                  <p className="mb-5">{user?.introduction}</p>
+                  <h4>Looking For</h4>
+                  <p>{user?.lookingFor}</p>
+                </div>
               </Tab>
               <Tab eventKey="interest" title="Interests">
-                <h4>Interests</h4>
-                <p>{user?.interest}</p>
+                <div className="m-5">
+                  <h4>Interests</h4>
+                  <p>{user?.interest}</p>
+                </div>
               </Tab>
               <Tab eventKey="photos" title="Photos" className="photos-tab">
                 <Gallery photos={user.photos} />
               </Tab>
               <Tab eventKey="messages" title="Messages">
-                <p>Messages will go here...</p>
+                <div className="m-5">
+                  <p>Messages will go here...</p>
+                </div>
               </Tab>
             </Tabs>
           </TabPanel>

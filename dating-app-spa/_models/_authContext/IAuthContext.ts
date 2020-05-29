@@ -14,7 +14,7 @@ export interface IToken {
 export interface IUserContextValues {
   isLoggedIn: boolean;
   handleLoggedIn: (token?: string | undefined) => void;
-  updateMainPhoto: (photoId: number) => void;
+  updateUser: (user: IUser) => void;
   addUploadedUserPhotos: (photos: IPhoto[]) => void;
   user: IToken | null;
   userDetails: IUser | null;

@@ -1,7 +1,9 @@
 import React from "react";
 import { Col, Card as _Card, Button } from "react-bootstrap";
-import { IUser } from "../../../_models";
+import { IUser } from "../../../../_models";
 import styled from "styled-components";
+import Router from "next/router";
+import Link from "next/link";
 
 interface Props {
   user: IUser;
@@ -45,15 +47,25 @@ const EditUserCard = ({
           </div>
         </Card.Body>
         <Card.Footer>
-          <Button
-            variant="success"
-            className="btn-block w-100"
-            disabled={disabeSubmitBtn}
-            type="button"
-            onClick={handleSaveChanged}
-          >
-            Save Changes
-          </Button>
+          <div className="btn-group d-flex">
+            <Button
+              variant="success"
+              className="w-100"
+              disabled={disabeSubmitBtn}
+              type="button"
+              onClick={handleSaveChanged}
+            >
+              Save Changes
+            </Button>
+            <Link href="/members/[id]" as={`/members/${user.id}`}>
+              <a
+                // variant="info"
+                className="btn btn-info w-100"
+              >
+                Done Editing
+              </a>
+            </Link>
+          </div>
         </Card.Footer>
       </Card>
     </Col>

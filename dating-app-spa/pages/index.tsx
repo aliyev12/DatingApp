@@ -7,7 +7,7 @@ import Users from "../components/users/Users";
 const IndexPage = () => (
   <Layout title="Home | Next.js + TypeScript Example">
     <Home />
-    <Users />
+    {/* <Users /> */}
   </Layout>
 );
 

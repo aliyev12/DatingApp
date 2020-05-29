@@ -3,6 +3,7 @@ import App from "next/app";
 import { AuthProvider } from "../contexts/auth/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
+import "../utils/style.css";
 
 export default class MyApp extends App {
   render() {

@@ -1,44 +1,18 @@
 import React from "react";
-import {
-  Form,
-  FormControl,
-  Button,
-  InputGroup,
-  Popover as _Popover,
-} from "react-bootstrap";
+import { Form, FormControl, Button } from "react-bootstrap";
+import { InputGroup, Popover as _Popover } from "react-bootstrap";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { Formik } from "formik";
 import { AuthContext } from "../../../contexts";
-import ErrorPopover from "./ErrorPopover";
 import { LoginSchema } from "../../../utils/validationSchemas";
-import { ILoginStatus, ILoginValues } from "../../../_models";
+import { ILoginValues } from "../../../_models";
 
 const LoginNavForm = () => {
   const [showPass, setShowPass] = React.useState(false);
-  const [errorPopover, setErrorPopover] = React.useState({
-    show: false,
-    message: "",
-  });
-  const userContextValues = React.useContext(AuthContext);
-  const { handleLoggedIn, login } = userContextValues;
-  const loginBtnRef = React.useRef(null);
+  const { login } = React.useContext(AuthContext);
 
-  const handleLogin = async (values: ILoginValues, { setSubmitting }: any) => {
-    await login(values).then((res: ILoginStatus) => {
-      if (res.status === "success" && res.token) handleLoggedIn(res.token);
-      if (res.status === "fail" && res.message) {
-        setErrorPopover({
-          show: true,
-          message: res.message,
-        });
-        setTimeout(() => {
-          setErrorPopover({
-            show: false,
-            message: "",
-          });
-        }, 10000);
-      }
-    });
+  const handleLogin = (values: ILoginValues, { setSubmitting }: any) => {
+    login(values);
     setSubmitting(false);
   };
 
@@ -58,7 +32,6 @@ const LoginNavForm = () => {
           handleSubmit,
           isSubmitting,
         } = yupProps;
-        // console.log("formik = ", yupProps);
 
         return (
           <Form inline onSubmit={handleSubmit}>
@@ -115,14 +88,8 @@ const LoginNavForm = () => {
               className="ml-sm-2 mt-3 mt-lg-0"
               type="submit"
               disabled={isSubmitting}
-              ref={loginBtnRef}
             >
               Login{isSubmitting ? "..." : ""}
-              <ErrorPopover
-                targetRef={loginBtnRef.current}
-                showPopover={errorPopover.show}
-                message={errorPopover.message}
-              />
             </Button>
           </Form>
         );

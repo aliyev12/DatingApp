@@ -3,20 +3,19 @@ import { Container, Col, Row } from "react-bootstrap";
 import { Card as _Card, Tabs } from "react-bootstrap";
 import { Tab, Form } from "react-bootstrap";
 import styled from "styled-components";
-import { useUser } from "../useUser";
 import { Formik, FormikProps } from "formik";
 import { EditProfileSchema } from "../../../utils/validationSchemas";
 import { IEditUserValues, IUser } from "../../../_models";
-import EditUserCard from "./EditUserCard";
-import EditHeading from "./EditHeading";
-import Textarea from "./Textarea";
-import LocationDetails from "./LocationDetails";
-import { ToastContainer, toast } from "react-toastify";
+import EditUserCard from "./info/EditUserCard";
+import EditHeading from "./edit-profile/EditHeading";
+import Textarea from "./edit-profile/Textarea";
+import LocationDetails from "./edit-profile/LocationDetails";
+import { toast } from "react-toastify";
 import API, { AxiosRequestConfig } from "../../../utils/API";
 
 // import { UsersContext } from "../../../contexts";
 import { updateUser } from "../../../contexts";
-import PhotoEditor from "./PhotoEditor";
+import PhotoEditor from "./edit-photo/PhotoEditor";
 
 export const EditUser = ({ id, user }: { id: string; user: IUser }) => {
   React.useEffect(() => {
@@ -63,8 +62,7 @@ export const EditUser = ({ id, user }: { id: string; user: IUser }) => {
       {(yupProps: FormikProps<IEditUserValues>) => {
         return (
           <Container className="mt-4">
-            {yupProps.dirty && <EditHeading alertType="info" />}
-            <ToastContainer />
+            <EditHeading showAlert={yupProps.dirty} alertType="info" />
             <Row>
               <EditUserCard
                 user={user}
@@ -102,7 +100,7 @@ export const EditUser = ({ id, user }: { id: string; user: IUser }) => {
                       </Form>
                     </Tab>
                     <Tab eventKey="photos" title="Edit Photos">
-                      <PhotoEditor photos={user.photos} />
+                      <PhotoEditor photos={user.photos} userId={user.id} />
                     </Tab>
                   </Tabs>
                 </TabPanel>

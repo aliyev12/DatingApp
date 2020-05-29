@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
 
 namespace DatingApp.API.Controllers
 {
@@ -18,12 +19,14 @@ namespace DatingApp.API.Controllers
     {
         private readonly IAuthRepository _repo; // repository layer
         private readonly IConfiguration _config; // values from appsettings.json
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
             // Initializing repo will expose the repository layer to this controller
             _repo = repo;
             // Initializing config will allow this controller to get values from appsettings.json
             _config = config;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -97,11 +100,13 @@ namespace DatingApp.API.Controllers
                 throw new Exception("Security keys did not match.");
             }
 
+            var user = _mapper.Map<UserForDetailsDto>(userFromRepo);
 
             // Return token to client in a form of a new object, usign WriteToken method to write token to response
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             });
         }
     }

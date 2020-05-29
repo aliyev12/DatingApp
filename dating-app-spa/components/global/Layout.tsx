@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import { createGlobalStyle, css } from "styled-components";
 import Navbar from "./navbar/Navbar";
 import { customTabsStyles } from "../../utils/customTabsStyles";
+import { ToastContainer } from "react-toastify";
 
 type Props = {
   title?: string;
@@ -21,6 +22,7 @@ const Layout: React.FunctionComponent<Props> = ({
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
     <Navbar />
+    <ToastContainer />
     <Container className="mt-5">{children}</Container>
     <footer>
       <hr />

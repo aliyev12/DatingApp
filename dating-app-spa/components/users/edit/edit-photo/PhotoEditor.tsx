@@ -1,17 +1,20 @@
 import React from "react";
 import { Row as _Row, Col, Card } from "react-bootstrap";
 import { FaTrash, FaToggleOn, FaToggleOff } from "react-icons/fa";
-import { IPhoto } from "../../../_models";
+import { IPhoto } from "../../../../_models";
 import styled from "styled-components";
-import UploadPhotos from "./UploadPhotos";
-import { AuthContext } from "../../../contexts";
+import UploadPhotos from "./upload-photos/UploadPhotos";
+import { AuthContext } from "../../../../contexts";
+import API from "../../../../utils/API";
+import { toast } from "react-toastify";
 
 interface Props {
   photos: IPhoto[];
+  userId: number;
 }
 
-const PhotoEditor = ({ photos }: Props) => {
-  const { updateMainPhoto } = React.useContext(AuthContext);
+const PhotoEditor = ({ photos, userId }: Props) => {
+  const { updateUser, updateMainPhoto } = React.useContext(AuthContext);
   const [mainPhotoId, setMainPhotoId] = React.useState<number | null>(null);
 
   React.useEffect(() => {
@@ -23,10 +26,17 @@ const PhotoEditor = ({ photos }: Props) => {
     }
   }, []);
 
-  const handleIsMainChange = (id: number) => {
-    // call API
-    setMainPhotoId(id);
-    updateMainPhoto(id);
+  const handleIsMainChange = async (id: number) => {
+    await API.post(`/users/${userId}/photos/${id}/setMain`)
+      .then((res) => {
+        updateUser(res.data.user);
+        setMainPhotoId(id);
+        toast.success("Main photo successfully updated.");
+      })
+      .catch((err) => {
+        console.log("err = ", err);
+        toast.error("Error with updating main photo.");
+      });
   };
 
   if (!mainPhotoId || !photos.length) return null;

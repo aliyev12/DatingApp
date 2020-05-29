@@ -1,4 +1,4 @@
-import API from "../../../utils/API";
+import API from "../../../../../utils/API";
 import axios from "axios";
 
 export const uploadFiles = async (

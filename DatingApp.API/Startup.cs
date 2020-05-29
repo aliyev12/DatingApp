@@ -78,7 +78,11 @@ namespace DatingApp.API
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x
+                            // .WithOrigins("https://someaddress.com") // When app is actually deployed, add frontend url here
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader());
 
             app.UseAuthentication();
 

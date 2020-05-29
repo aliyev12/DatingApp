@@ -3,6 +3,7 @@ import { Row, Col } from "react-bootstrap";
 
 interface Props {
   alertType: string;
+  showAlert: boolean;
 }
 
 const alertTypes: {
@@ -18,17 +19,19 @@ const alertTypes: {
   },
 };
 
-const EditHeading = ({ alertType = "info" }: Props) => {
+const EditHeading = ({ showAlert, alertType = "info" }: Props) => {
   return (
     <Row>
       <Col sm={4}>
         <h1>Your Profile</h1>
       </Col>
       <Col sm={8}>
-        <div className={`alert alert-${alertType}`}>
-          <strong>Information:</strong>
-          {alertTypes[alertType].message}
-        </div>
+        {showAlert && (
+          <div className={`alert alert-${alertType}`}>
+            <strong>Information:</strong>
+            {alertTypes[alertType].message}
+          </div>
+        )}
       </Col>
     </Row>
   );

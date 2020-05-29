@@ -5,6 +5,7 @@ import { FaTrash, FaUpload, FaBan } from "react-icons/fa";
 interface Props {
   files: (File & { preview: string; path: string })[];
   removeImage: (preview: string) => void;
+  removeAllImages: () => void;
   handleUpload: () => void;
   handleCancelUpload: () => void;
   progress: number;
@@ -15,6 +16,7 @@ interface Props {
 const UploadQueue = ({
   files,
   removeImage,
+  removeAllImages,
   handleUpload,
   handleCancelUpload,
   progress,
@@ -88,14 +90,18 @@ const UploadQueue = ({
               <FaBan className="mr-3" />
               <span>Cancel</span>
             </Button>
-            <Button variant="danger">
+            <Button
+              variant="danger"
+              onClick={removeAllImages}
+              disabled={files.length === 0}
+            >
               <FaTrash className="mr-3" />
-              <span>Remove</span>
+              <span>Remove All</span>
             </Button>
           </ButtonGroup>
         </>
       ) : (
-        <p className="muted">No files have been uploaded</p>
+        <p className="muted">No files have been added to queue</p>
       )}
     </Col>
   );

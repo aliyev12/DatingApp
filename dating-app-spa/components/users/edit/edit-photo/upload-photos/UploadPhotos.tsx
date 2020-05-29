@@ -6,8 +6,8 @@ import { Container } from "./Container";
 import Thumbs from "./Thumbs";
 import UploadQueue from "./UploadQueue";
 import { uploadFiles } from "./uploadFiles";
-import { AuthContext } from "../../../contexts";
-import { IUserContextValues } from "../../../_models";
+import { AuthContext } from "../../../../../contexts";
+import { IUserContextValues } from "../../../../../_models";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -52,6 +52,11 @@ const UploadPhotos = () => {
     setFiles(newFiles);
   };
 
+  const removeAllImages = () => {
+    setFiles([]);
+    toast.info("All images have been removed from upload queue.");
+  };
+
   const handleUpload = () => {
     const newSource = axios.CancelToken.source();
     setCancelToken(newSource);
@@ -59,9 +64,6 @@ const UploadPhotos = () => {
     if (user && user.nameid) {
       uploadFiles(user.nameid, files, setProgress, newSource)
         .then((res) => {
-          console.log("files from handle = ", files);
-          console.log("res from handle = ", res);
-
           addUploadedUserPhotos(
             res.filter((r) => r.status === 201).map((r) => r.data)
           );
@@ -96,6 +98,7 @@ const UploadPhotos = () => {
         <UploadQueue
           files={files}
           removeImage={removeImage}
+          removeAllImages={removeAllImages}
           progress={progress}
           handleUpload={handleUpload}
           handleCancelUpload={() => handleCancelUpload()}
