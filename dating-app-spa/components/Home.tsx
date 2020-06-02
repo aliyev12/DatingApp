@@ -4,6 +4,7 @@ import { Container, Button, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
 import { AuthContext } from "../contexts";
 import Users from "../components/users/Users";
+import Link from "next/link";
 
 const Content = styled.div`
   text-align: center;
@@ -23,17 +24,12 @@ const Home = (props: Props) => {
             Come on in to view your matches... All you need to do is sign up!
           </p>
           <div className="text-center">
-            <Button
-              variant="primary"
-              size="lg"
-              className="mr-3"
-              onClick={() => Router.push("/register")}
-            >
-              Register
-            </Button>
-            <Button variant="info" size="lg">
-              Learn more
-            </Button>
+            <Link href="/register">
+              <a className="btn btn-primary btn-lg mr-3">Register</a>
+            </Link>
+            <Link href="/learn-more">
+              <a className="btn btn-info btn-lg mr-3">Learn more</a>
+            </Link>
           </div>
         </>
       )}

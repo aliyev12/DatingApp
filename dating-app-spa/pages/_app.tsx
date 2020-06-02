@@ -4,8 +4,8 @@ import { GlobalProvider } from "../contexts/global/GlobalContext";
 import { AuthProvider } from "../contexts/auth/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
+import "react-day-picker/lib/style.css";
 import "../utils/style.css";
-// import { Confirm } from "../contexts/global/Confirm";
 
 export default class MyApp extends App {
   render() {
@@ -16,7 +16,6 @@ export default class MyApp extends App {
         <AuthProvider>
           <Component {...pageProps} />
         </AuthProvider>
-        {/* <Confirm /> */}
       </GlobalProvider>
     );
   }

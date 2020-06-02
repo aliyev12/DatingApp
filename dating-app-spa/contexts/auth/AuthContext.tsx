@@ -27,16 +27,18 @@ export const AuthProvider = ({ children }: any) => {
     // This one fires when you click on forbidden URL - that URL shouldn't be displaying in the first place!
     // Check that a new route is OK
     const handleRouteChange = (url: string) => {
-      console.log("handleRouteChange fired");
-      if (url !== "/" && !state.isLoggedIn) {
+      if (url !== "/" && url !== "/register" && !state.isLoggedIn) {
         window.location.href = "/";
       }
     };
 
     // This one fires when you directly go to a forbidden URL
     // Check that initial route is OK
-    if (pathname !== "/" && state.isLoggedIn === null) {
-      console.log("pathname !==  fired");
+    if (
+      pathname !== "/" &&
+      pathname !== "/register" &&
+      state.isLoggedIn === null
+    ) {
       window.location.href = "/";
     }
 
