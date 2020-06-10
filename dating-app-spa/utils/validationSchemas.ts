@@ -53,13 +53,9 @@ export const RegisterSchema = Yup.object().shape({
     .required(alerts.gender.required),
   dateOfBirth: Yup.string()
     .trim()
-    .matches(
-      /([0-2]\d{1}|3[0-1])\/(0\d{1}|1[0-2])\/(19|20)\d{2}/,
-      function (arg1) {
-        console.log(arg1);
-      }
-      // alerts.dateOfBirth.invalid
-    )
+    .matches(/(0\d{1}|1[0-2])\/([0-2]\d{1}|3[0-1])\/(19|20)\d{2}/, {
+      message: alerts.dateOfBirth.invalid,
+    })
     .required(alerts.dateOfBirth.invalid),
   password: Yup.string()
     .min(8, alerts.password.wrongLength)
