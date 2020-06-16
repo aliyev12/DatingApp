@@ -27,7 +27,10 @@ const Thumbs = ({ files, removeImage }: Props) => {
             >
               <div className="thumb">
                 <div className="thumb-inner">
-                  <img src={file.preview} className="thumb-img" />
+                  <img
+                    src={file.preview || "/default-user.webp"}
+                    className="thumb-img"
+                  />
                   <Button
                     variant="outline-danger"
                     className="del-img-btn"

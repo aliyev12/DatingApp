@@ -13,7 +13,11 @@ const UserCard: React.FunctionComponent<Props> = ({ user }: Props) => {
   return (
     <Card className="mb-4">
       <div className="card-img-wrapper">
-        <Card.Img variant="top" src={user.photoUrl} alt={user.knownAs} />
+        <Card.Img
+          variant="top"
+          src={user.photoUrl || "/default-user.webp"}
+          alt={user.knownAs}
+        />
         <ul className="list-inline member-icons animate text-center">
           <li className="list-inline-item">
             <Link href="/members/[id]" as={`/members/${user.id}`}>

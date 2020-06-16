@@ -133,7 +133,7 @@ namespace DatingApp.API.Controllers
 
             var photoFromRepo = await _repo.GetPhoto(id);
 
-            if (photoFromRepo.IsMain) return BadRequest("You cannot delete your main photo.");
+            if (user.Photos.Count > 1 && photoFromRepo.IsMain) return BadRequest("You cannot delete your main photo.");
 
             // When photos have a PublicId, that means that they are on Cloudinary, in which case, we need to delete the photo from Cloudinary as well as from repository
             if (photoFromRepo.PublicId != null)

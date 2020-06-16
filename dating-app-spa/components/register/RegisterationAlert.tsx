@@ -1,5 +1,6 @@
 import React from "react";
-import { Alert } from "react-bootstrap";
+import { Alert as _Alert } from "react-bootstrap";
+import styled from "styled-components";
 
 export const RegistrationAlert = ({
   registrationStatus,
@@ -39,3 +40,12 @@ export const RegistrationAlert = ({
     </Alert>
   );
 };
+
+const Alert = styled(_Alert)`
+  margin-bottom: 3rem !important;
+
+  ul {
+    list-style: none;
+    margin-bottom: 0 !important;
+  }
+`;

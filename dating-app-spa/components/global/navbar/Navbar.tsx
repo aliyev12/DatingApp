@@ -68,7 +68,9 @@ const NavbarComponent = () => {
                   className="nav-avatar"
                   title="Go to user profile"
                   style={{
-                    backgroundImage: `url(${userDetails.photoUrl})`,
+                    backgroundImage: `url(${
+                      userDetails.photoUrl || "/default-user.webp"
+                    })`,
                   }}
                 >
                   <span className="sr-only">Go to user profile</span>

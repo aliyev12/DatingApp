@@ -1,6 +1,8 @@
 import React from "react";
-import { Button, Col, Table, ButtonGroup, ProgressBar } from "react-bootstrap";
+import { Button, Col, Table as _Table } from "react-bootstrap";
+import { ButtonGroup, ProgressBar } from "react-bootstrap";
 import { FaTrash, FaUpload, FaBan } from "react-icons/fa";
+import styled from "styled-components";
 
 interface Props {
   files: (File & { preview: string; path: string })[];
@@ -108,3 +110,9 @@ const UploadQueue = ({
 };
 
 export default UploadQueue;
+
+const Table = styled(_Table)`
+  tbody td strong {
+    word-break: break-all;
+  }
+`;

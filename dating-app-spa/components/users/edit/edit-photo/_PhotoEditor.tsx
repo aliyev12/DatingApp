@@ -85,7 +85,10 @@ const PhotoEditor = ({ photos, userId }: Props) => {
                 }
                 className="mb-4"
               >
-                <Card.Img variant="top" src={photo.url} />
+                <Card.Img
+                  variant="top"
+                  src={photo.url || "/default-user.webp"}
+                />
                 <Card.Footer className="d-flex justify-content-between">
                   <button
                     onClick={() => handleIsMainChange(photo.id)}

@@ -20,7 +20,7 @@ const EditUserCard = ({
     <Col sm={4}>
       <Card>
         <Card.Img
-          src={user?.photoUrl}
+          src={user?.photoUrl || "/default-user.webp"}
           alt={user?.knownAs}
           variant="top"
           className="img-thumbnail"

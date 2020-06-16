@@ -9,6 +9,7 @@ const alerts = {
     wrongLength: "Username must be between 4 and 50 characters long",
     required: "Please, provide your username",
   },
+  knownAs: {},
   email: {
     wrongLength: "Email must be between 4 and 320 characters long",
     required: "Please, provide your email address",
@@ -20,6 +21,12 @@ const alerts = {
   dateOfBirth: {
     invalid:
       "Please, provide your date in the following format: (2 digits for month)/(2 digits for day)/(4 digits for year)",
+  },
+  country: {
+    required: "Please, provide your country",
+  },
+  city: {
+    required: "Please, provide your city",
   },
   password: {
     wrongLength: "Password must be between 8 and 50 characters long",
@@ -41,6 +48,7 @@ export const RegisterSchema = Yup.object().shape({
     .min(4, alerts.username.wrongLength)
     .max(50, alerts.username.wrongLength)
     .required(alerts.username.required),
+  knownAs: Yup.string(),
   email: Yup.string()
     .email(alerts.email.invalid)
     .min(4, alerts.username.wrongLength)
@@ -57,6 +65,8 @@ export const RegisterSchema = Yup.object().shape({
       message: alerts.dateOfBirth.invalid,
     })
     .required(alerts.dateOfBirth.invalid),
+  country: Yup.string().required(alerts.country.required),
+  city: Yup.string().required(alerts.city.required),
   password: Yup.string()
     .min(8, alerts.password.wrongLength)
     .max(50, alerts.password.wrongLength)

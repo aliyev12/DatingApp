@@ -2,16 +2,19 @@ import React from "react";
 import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import { FaEye, FaEyeSlash, FaCalendarAlt } from "react-icons/fa";
 import { DatePicker } from "../../utils/DatePicker";
+import styled from "styled-components";
+// import { CountryRegion } from "./CountryRegion";
 
-const Inputs = ({
-  errors,
-  isValid,
-  touched,
-  handleChange,
-  handleBlur,
-  setFieldValue,
-  values,
-}: any) => {
+const Inputs = (props: any) => {
+  const {
+    errors,
+    isValid,
+    touched,
+    handleChange,
+    handleBlur,
+    setFieldValue,
+    values,
+  } = props;
   const [showPass, setShowPass] = React.useState<{
     password: boolean;
     confirmPassword: boolean;
@@ -23,9 +26,9 @@ const Inputs = ({
 
   const pass = (name: "password" | "confirmPassword") => (
     <Form.Group controlId={`control-id__${name}`} className="mb-5">
-      <Form.Label>
+      <FormLabel required>
         {name === "password" ? "Password" : "Confirm Password"}
-      </Form.Label>
+      </FormLabel>
       <InputGroup className={`mr-sm-2 mt-3 mt-lg-0`}>
         <FormControl
           type={showPass[name] ? "text" : "password"}
@@ -61,16 +64,23 @@ const Inputs = ({
     </Form.Group>
   );
 
-  const text = (
-    name: string,
-    label: string,
-    placeholder: string,
-    type: string = "text"
-  ) => (
+  const input = ({
+    name,
+    label,
+    placeholder,
+    type,
+    required,
+  }: {
+    name: string;
+    label?: string;
+    placeholder?: string;
+    type?: string;
+    required?: boolean;
+  }) => (
     <Form.Group controlId={`control-id__${name}`} className="mb-5">
-      <Form.Label>{label}</Form.Label>
+      <FormLabel required={required ? required : false}>{label}</FormLabel>
       <FormControl
-        type={type}
+        type={type ? type : "text"}
         placeholder={placeholder}
         name={name}
         className={`mr-sm-2 mt-3 mt-lg-0`}
@@ -88,11 +98,28 @@ const Inputs = ({
 
   return (
     <>
-      {text("name", "Name", "Jane Doe")}
-      {text("username", "Username", "jane.doe")}
-      {text("email", "Email", "jane.doe@email.com", "email")}
+      {input({
+        name: "name",
+        label: "Name",
+        placeholder: "Jane Doe",
+        required: true,
+      })}
+      {input({
+        name: "username",
+        label: "Username",
+        placeholder: "jane.doe",
+        required: true,
+      })}
+      {input({ name: "knownAs", label: "Known As", placeholder: "Janny" })}
+      {input({
+        name: "email",
+        label: "Email",
+        placeholder: "jane.doe@email.com",
+        type: "email",
+        required: true,
+      })}
       <Form.Group controlId="control-id__gender" className="mb-5">
-        <Form.Label>Gender</Form.Label>
+        <FormLabel>Gender</FormLabel>
         <Form.Control
           as="select"
           name="gender"
@@ -113,7 +140,7 @@ const Inputs = ({
 
       {/* dateOfBirth */}
       <Form.Group controlId="control-id__dateOfBirth" className="mb-5">
-        <Form.Label>Date of Birth</Form.Label>
+        <FormLabel required>Date of Birth</FormLabel>
         <InputGroup className={`mr-sm-2 mt-3 mt-lg-0`}>
           <FormControl
             type="text"
@@ -140,6 +167,9 @@ const Inputs = ({
         </InputGroup>
       </Form.Group>
 
+      {/* <CountryRegion {...props} /> */}
+      {input({ name: "city", label: "City", placeholder: "New York City" })}
+      {input({ name: "country", label: "Country", placeholder: "USA" })}
       {pass("password")}
       {pass("confirmPassword")}
 
@@ -165,7 +195,21 @@ const Inputs = ({
 
 export default Inputs;
 
-/*
-        public DateTime DateOfBirth { get; set; }
-        public string KnownAs { get; set; }
-*/
+const FormLabel = styled(Form.Label)`
+  position: relative;
+  ${({ required }) =>
+    required
+      ? `
+    &::before {
+      content: "*";
+      font-size: 2rem;
+      color: var(--red);
+      left: -1.3rem;
+      top: -0.3rem;
+      position: absolute;
+      left: -1rem;
+      top: 0;
+    }  
+  `
+      : ""}
+`;

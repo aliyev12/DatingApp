@@ -100,7 +100,7 @@ export const EditUser = ({ id, user }: { id: string; user: IUser }) => {
                       </Form>
                     </Tab>
                     <Tab eventKey="photos" title="Edit Photos">
-                      <PhotoEditor photos={user.photos} userId={user.id} />
+                      <PhotoEditor userId={user.id} />
                     </Tab>
                   </Tabs>
                 </TabPanel>

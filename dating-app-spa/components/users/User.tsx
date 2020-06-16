@@ -1,12 +1,19 @@
-import React from "react";
-import { AuthContext } from "../../contexts";
-import { IUser } from "../../_models";
-import { Container, Card as _Card, Button } from "react-bootstrap";
-import { Col, Row, Tabs, Tab } from "react-bootstrap";
-import styled from "styled-components";
-import { Gallery } from "./Gallery";
-import { useUser } from "./useUser";
 import Router from "next/router";
+import React from "react";
+import {
+  Button,
+  Card as _Card,
+  Col,
+  Container,
+  Row,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
+import styled from "styled-components";
+import { AuthContext, getUser } from "../../contexts";
+import { NoContent } from "../../utils/alerts";
+import { IUser } from "../../_models";
+import { Gallery } from "./Gallery";
 
 interface Props {
   id: string;
@@ -14,7 +21,8 @@ interface Props {
 
 const User: React.FunctionComponent<Props> = ({ id }: Props) => {
   const [user, setUser] = React.useState<IUser | null>();
-  const { userDetails } = React.useContext(AuthContext);
+  const authContext = React.useContext(AuthContext);
+  const { userDetails, isLoggedIn } = authContext;
 
   const isUserOwnProfile = () => userDetails && parseInt(id) === userDetails.id;
 
@@ -23,11 +31,15 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
       if (isUserOwnProfile()) {
         setUser(userDetails);
       } else {
-        const res = useUser(id);
-        setUser(res.user);
+        if (isLoggedIn) initUser();
       }
     }
-  }, [userDetails]);
+  }, [authContext]);
+
+  const initUser = async () => {
+    const res = await getUser(id);
+    setUser(res);
+  };
 
   if (!user) return null;
   return (
@@ -45,7 +57,8 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
         <Col sm={4}>
           <Card>
             <Card.Img
-              src={user?.photoUrl}
+              src={user?.photoUrl || "/default-user.webp"}
+              data-test="test"
               alt={user?.knownAs}
               variant="top"
               className="img-thumbnail"
@@ -101,27 +114,54 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
               className="member-tabset"
               defaultActiveKey="about"
             >
-              <Tab eventKey="about" title={`About ${user?.knownAs}`}>
-                <div className="m-5">
-                  <h4>Description</h4>
-                  <p className="mb-5">{user?.introduction}</p>
-                  <h4>Looking For</h4>
-                  <p>{user?.lookingFor}</p>
-                </div>
+              <Tab
+                eventKey="about"
+                title={`About ${user?.knownAs}`}
+                className="about-tab"
+              >
+                {user?.introduction && user?.lookingFor ? (
+                  <div className="m-5">
+                    {user?.introduction && (
+                      <>
+                        <h4>Description</h4>
+                        <p className="mb-5">{user?.introduction}</p>
+                      </>
+                    )}
+                    {user?.lookingFor && (
+                      <>
+                        <h4>Looking For</h4>
+                        <p>{user?.lookingFor}</p>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <NoContent msg="There is currently nothing about the user" />
+                )}
               </Tab>
               <Tab eventKey="interest" title="Interests">
-                <div className="m-5">
-                  <h4>Interests</h4>
-                  <p>{user?.interest}</p>
-                </div>
+                {user?.interest ? (
+                  <div className="m-5">
+                    <h4>Interests</h4>
+                    <p>{user?.interest}</p>
+                  </div>
+                ) : (
+                  <NoContent msg="User interests are currently not there" />
+                )}
               </Tab>
-              <Tab eventKey="photos" title="Photos" className="photos-tab">
-                <Gallery photos={user.photos} />
+              <Tab eventKey="photos" title="Photos">
+                {user.photos && user.photos.length ? (
+                  <div className="photos-tab-content">
+                    <Gallery photos={user.photos} />
+                  </div>
+                ) : (
+                  <NoContent msg="There are currently no photos" />
+                )}
               </Tab>
               <Tab eventKey="messages" title="Messages">
-                <div className="m-5">
+                <NoContent msg="There are currently no messages" />
+                {/* <div className="m-5">
                   <p>Messages will go here...</p>
-                </div>
+                </div> */}
               </Tab>
             </Tabs>
           </TabPanel>
@@ -152,10 +192,7 @@ const Card = styled(_Card)`
 `;
 
 const TabPanel = styled.div`
-  .photos-tab {
-    display: flex;
-    justify-content: center;
-  }
-  .tab-pane {
+  .tab-content {
+    padding-top: 25px !important;
   }
 `;

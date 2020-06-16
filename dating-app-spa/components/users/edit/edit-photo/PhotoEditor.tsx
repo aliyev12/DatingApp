@@ -9,14 +9,17 @@ import API from "../../../../utils/API";
 import { toast } from "react-toastify";
 import { Confirm } from "../../../../utils/Confirm";
 import { ExpandImageModal } from "../../../../utils/ExpandImageModal";
+import { NoContent } from "../../../../utils/alerts";
 
 interface Props {
   photos: IPhoto[];
   userId: number;
 }
 
-const PhotoEditor = ({ photos, userId }: Props) => {
-  const { updateUser, deletePhoto } = React.useContext(AuthContext);
+const PhotoEditor = ({ userId }: Props) => {
+  const { userDetails, updateUser, deletePhoto } = React.useContext(
+    AuthContext
+  );
   const [mainPhotoId, setMainPhotoId] = React.useState<number | null>(null);
   const [expandImage, setExpandImage] = React.useState<{
     imgUrl: string | undefined;
@@ -33,6 +36,8 @@ const PhotoEditor = ({ photos, userId }: Props) => {
     show: false,
   });
 
+  const photos = userDetails && userDetails.photos ? userDetails.photos : [];
+
   React.useEffect(() => {
     const foundPhoto = photos.find((p) => p.isMain);
     if (foundPhoto) {
@@ -40,7 +45,7 @@ const PhotoEditor = ({ photos, userId }: Props) => {
     } else if (!foundPhoto && photos.length) {
       setMainPhotoId(photos[0].id);
     }
-  }, []);
+  }, [userDetails]);
 
   const hideConfirm = () =>
     setConfirmation({
@@ -75,58 +80,63 @@ const PhotoEditor = ({ photos, userId }: Props) => {
     }
   };
 
-  if (!mainPhotoId || !photos.length) return null;
   return (
     <>
-      <Row>
-        {photos.map((photo) => {
-          const isMain = mainPhotoId === photo.id;
-          return (
-            <Col sm={2} key={photo.id}>
-              <Card
-                isBeingDeleted={confirmation.id === photo.id}
-                isMain={isMain}
-              >
-                <Img
-                  title={photo.description}
-                  style={{
-                    backgroundImage: `url(${photo.url})`,
-                  }}
-                  onClick={() =>
-                    setExpandImage({
-                      imgUrl: photo.url,
-                      show: true,
-                    })
-                  }
-                />
-                <Footer>
-                  <button
-                    onClick={() => handleIsMainChange(photo.id)}
-                    disabled={isMain}
-                    className={`btn p-0 ${
-                      isMain ? "text-success" : "text-secondary"
-                    }`}
-                  >
-                    <div className="d-flex flex-column align-items-center">
-                      <div className="main-label">main</div>
-                      {isMain ? <FaToggleOff /> : <FaToggleOn />}
-                    </div>
-                  </button>
-                  <button
-                    className="btn p-0 delete-img-btn text-danger"
+      {!photos.length ? (
+        <NoContent msg="There are currently no photos" />
+      ) : (
+        <Row>
+          {photos.map((photo) => {
+            const isMain = mainPhotoId && mainPhotoId === photo.id;
+            return (
+              <Col sm={2} key={photo.id}>
+                <Card
+                  isBeingDeleted={confirmation.id === photo.id}
+                  isMain={isMain}
+                >
+                  <Img
+                    title={photo.description}
+                    style={{
+                      backgroundImage: `url(${
+                        photo.url || "/default-user.webp"
+                      })`,
+                    }}
                     onClick={() =>
-                      setConfirmation({ id: photo.id, show: true })
+                      setExpandImage({
+                        imgUrl: photo.url,
+                        show: true,
+                      })
                     }
-                    disabled={photo.isMain}
-                  >
-                    <FaTrash />
-                  </button>
-                </Footer>
-              </Card>
-            </Col>
-          );
-        })}
-      </Row>
+                  />
+                  <Footer>
+                    <button
+                      onClick={() => handleIsMainChange(photo.id)}
+                      disabled={isMain}
+                      className={`btn p-0 ${
+                        isMain ? "text-success" : "text-secondary"
+                      }`}
+                    >
+                      <div className="d-flex flex-column align-items-center">
+                        <div className="main-label">main</div>
+                        {isMain ? <FaToggleOff /> : <FaToggleOn />}
+                      </div>
+                    </button>
+                    <button
+                      className="btn p-0 delete-img-btn text-danger"
+                      onClick={() =>
+                        setConfirmation({ id: photo.id, show: true })
+                      }
+                      disabled={photo.isMain && photos.length > 1}
+                    >
+                      <FaTrash />
+                    </button>
+                  </Footer>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
+      )}
       <UploadPhotos />
       <Confirm
         handleCancel={hideConfirm}

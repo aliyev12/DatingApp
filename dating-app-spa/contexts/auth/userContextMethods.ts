@@ -66,7 +66,12 @@ export const addUploadedUserPhotos = (
   setState: any,
   photos: IPhoto[]
 ) => {
-  const newUserDetails = { ...state.userDetails };
+  const { userDetails } = state;
+
+  const newUserDetails = { ...userDetails };
+  if (!userDetails.photos.length || !userDetails.photoUrl)
+    newUserDetails.photoUrl = photos[0].url;
+
   newUserDetails.photos = [...newUserDetails.photos, ...photos];
 
   setState({
@@ -76,7 +81,12 @@ export const addUploadedUserPhotos = (
   updateLS(newUserDetails);
 };
 
-export async function login(state: any, setState: any, values: ILoginValues) {
+export async function login(
+  state: any,
+  setState: any,
+  values: ILoginValues,
+  redirect: string | undefined = undefined
+) {
   const options: AxiosRequestConfig = {
     method: "POST",
     url: `/auth/login`,
@@ -97,6 +107,7 @@ export async function login(state: any, setState: any, values: ILoginValues) {
             userDetails: res.data.user,
           });
           toast.success("You have successfully logged in.");
+          if (redirect) Router.push(redirect);
         } else {
           setState({
             ...state,
@@ -121,7 +132,19 @@ export async function login(state: any, setState: any, values: ILoginValues) {
 }
 
 export const deletePhoto = (state: any, setState: any, photoId: number) => {
+  const { userDetails } = state;
   const newUserDetails = { ...state.userDetails };
+
+  // Find the photo to check if it is the current photo url
+  const foundPhoto = newUserDetails.photos.find(
+    (p: IPhoto) => p.id === photoId
+  );
+  if (foundPhoto) {
+    // And if it is the current photoUrl, then go ahead and remove that from user context
+    if (userDetails.photoUrl === foundPhoto.url)
+      newUserDetails.photoUrl = "/default-user.webp";
+  }
+
   newUserDetails.photos = newUserDetails.photos.filter(
     (p: IPhoto) => p.id !== photoId
   );

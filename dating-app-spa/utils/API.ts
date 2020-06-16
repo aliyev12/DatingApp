@@ -39,6 +39,23 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+// // You can intercept responses as well as requests like this:
+// axiosInstance.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   function (error) {
+//     console.dir(error);
+//     // Do something with response error
+//     // if (error.response.status === 401) {
+//     //     console.log('unauthorized, logging out ...');
+//     //     auth.logout();
+//     //     router.replace('/auth/login');
+//     // }
+//     return Promise.reject(error.response);
+//   }
+// );
+
 export * from "axios";
 export default axiosInstance;
 

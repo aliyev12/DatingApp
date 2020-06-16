@@ -104,6 +104,7 @@ export default Gallery;
 
 const GalleryWrapper = styled.div`
   max-width: 50rem;
+  margin: auto;
 
   .main-slider {
     margin-bottom: 1rem;
