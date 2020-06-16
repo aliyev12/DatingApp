@@ -1,19 +1,12 @@
 import Router from "next/router";
 import React from "react";
-import {
-  Button,
-  Card as _Card,
-  Col,
-  Container,
-  Row,
-  Tab,
-  Tabs,
-} from "react-bootstrap";
+import { Button, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import styled from "styled-components";
 import { AuthContext, getUser } from "../../contexts";
 import { NoContent } from "../../utils/alerts";
 import { IUser } from "../../_models";
 import { Gallery } from "./Gallery";
+import { UserInfo } from "./UserInfo";
 
 interface Props {
   id: string;
@@ -55,57 +48,26 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
       </Row>
       <Row>
         <Col sm={4}>
-          <Card>
-            <Card.Img
-              src={user?.photoUrl || "/default-user.webp"}
-              data-test="test"
-              alt={user?.knownAs}
-              variant="top"
-              className="img-thumbnail"
-            />
-            <Card.Body>
-              <div>
-                <strong>Location:</strong>
-                <p>
-                  {user?.city}, {user?.country}
-                </p>
-              </div>
-              <div>
-                <strong>Age:</strong>
-                <p>{user?.age}</p>
-              </div>
-              <div>
-                <strong>Last Active:</strong>
-                <p>{user?.lastActive}</p>
-              </div>
-              <div>
-                <strong>Member since:</strong>
-                <p>{user?.created}</p>
-              </div>
-            </Card.Body>
-            <Card.Footer>
-              <div className="btn-group d-flex">
-                {isUserOwnProfile() ? (
-                  <Button
-                    variant="warning"
-                    className="btn-block w-100"
-                    onClick={() => Router.push("/member/edit")}
-                  >
-                    Edit Profile
-                  </Button>
-                ) : (
-                  <>
-                    <Button variant="primary" className="w-100">
-                      Like
-                    </Button>
-                    <Button variant="success" className="w-100">
-                      Message
-                    </Button>
-                  </>
-                )}
-              </div>
-            </Card.Footer>
-          </Card>
+          <UserInfo user={user}>
+            {isUserOwnProfile() ? (
+              <Button
+                variant="warning"
+                className="btn-block w-100"
+                onClick={() => Router.push("/member/edit")}
+              >
+                Edit Profile
+              </Button>
+            ) : (
+              <>
+                <Button variant="primary" className="w-100">
+                  Like
+                </Button>
+                <Button variant="success" className="w-100">
+                  Message
+                </Button>
+              </>
+            )}
+          </UserInfo>
         </Col>
         <Col sm={8}>
           <TabPanel className="tab-panel">
@@ -172,24 +134,6 @@ const User: React.FunctionComponent<Props> = ({ id }: Props) => {
 };
 
 export default User;
-
-const Card = styled(_Card)`
-  .img-thumbnail {
-    margin: 2.5rem;
-    width: 85%;
-    height: 85%;
-  }
-
-  .card-body {
-    padding: 0 2.5rem;
-  }
-
-  .card-footer {
-    padding: 1rem 1.5rem;
-    background-color: var(--white);
-    border-top: none;
-  }
-`;
 
 const TabPanel = styled.div`
   .tab-content {
