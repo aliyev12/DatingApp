@@ -101,6 +101,8 @@ namespace DatingApp.API.Controllers
 
             var user = _mapper.Map<UserForDetailsDto>(userFromRepo);
 
+            user.LastActive = DateTime.Now;
+
             // Return token to client in a form of a new object, usign WriteToken method to write token to response
             return Ok(new
             {

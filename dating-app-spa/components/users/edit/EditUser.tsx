@@ -14,10 +14,13 @@ import { toast } from "react-toastify";
 import API, { AxiosRequestConfig } from "../../../utils/API";
 
 // import { UsersContext } from "../../../contexts";
-import { updateUser } from "../../../contexts";
+// import { updateUser } from "../../../contexts";
 import PhotoEditor from "./edit-photo/PhotoEditor";
+import { AuthContext } from "../../../contexts";
 
 export const EditUser = ({ id, user }: { id: string; user: IUser }) => {
+  const { updateUser } = React.useContext(AuthContext);
+
   React.useEffect(() => {
     window.addEventListener("beforeunload", () => msg);
     return () => window.addEventListener("beforeunload", () => {});
@@ -34,7 +37,8 @@ export const EditUser = ({ id, user }: { id: string; user: IUser }) => {
         url: `/users/${id}`,
         data: values,
       };
-      await API(options);
+      const res = await API(options);
+      updateUser(res.data);
       toast.success("Your information has been successfully updates.");
       yupProps.resetForm({ values: values });
     } catch (err) {

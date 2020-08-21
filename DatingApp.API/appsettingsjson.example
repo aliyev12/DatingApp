@@ -1,0 +1,21 @@
+{
+  "AppSettings": {
+    "Token": "ADD_VALUE"
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=db4free.net; Database=name_of_db; Uid=user_name; Pwd=user_password"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "CloudinarySettings": {
+    "CloudName": "ADD_VALUE",
+    "ApiKey": "ADD_VALUE",
+    "ApiSecret": "ADD_VALUE"
+  }
+}

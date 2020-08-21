@@ -100,6 +100,8 @@ export async function login(
         const tokenDetails = handleToken(res.data.token);
         if (tokenDetails.tokenIsValid) {
           updateLS(res.data.user);
+          console.log("res.data.user = ", res.data.user);
+          console.log("tokenDetails.tokenData = ", tokenDetails.tokenData);
           setState({
             ...state,
             isLoggedIn: tokenDetails.tokenIsValid,
