@@ -1,4 +1,4 @@
-import { ILoginValues, ILoginStatus } from "./ILogin";
+import { ILoginValues } from "./ILogin";
 import { IRegisterValues, IRegistrationStatus } from "./IRegister";
 import { IUser } from "..";
 import { IPhoto } from "../IPhoto";
@@ -19,7 +19,7 @@ export interface IUserContextValues {
   addUploadedUserPhotos: (photos: IPhoto[]) => void;
   user: IToken | null;
   userDetails: IUser | null;
-  login: (values: ILoginValues) => Promise<ILoginStatus>;
+  login: (values: ILoginValues) => Promise<any>;
   register: (values: IRegisterValues) => Promise<IRegistrationStatus>;
   logout: () => void;
 }

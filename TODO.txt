@@ -1,1 +1,22 @@
 TODO
+
+To deploy server to heroku:
+1. (optional, skip if already done) heroku login
+2. (optional, skip if already done) heroku container:login
+3. (optional, skip if already done) heroku apps:create examplenetcore
+
+4. dotnet publish -c Release
+
+5. (optional, skip if already done) Create Dockerfile like this:
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+WORKDIR /app
+COPY . .
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet DatingApp.API.dll
+
+6. docker build -t datingappaspnet ./bin/release/netcoreapp3.1/publish
+
+7. docker tag datingappaspnet registry.heroku.com/datingappaspnet/web
+
+8. docker push registry.heroku.com/datingappaspnet/web
+
+9. heroku container:release web -a datingappaspnet

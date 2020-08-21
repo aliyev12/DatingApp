@@ -1,7 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
 import { Container } from "react-bootstrap";
-import { createGlobalStyle, css } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import Navbar from "./navbar/Navbar";
 import { customTabsStyles } from "../../utils/customTabsStyles";
 import { ToastContainer } from "react-toastify";
