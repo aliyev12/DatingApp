@@ -20,7 +20,7 @@
     "@types/react-toastify": "^4.1.0",
     "@types/styled-components": "^5.1.0",
     "@types/yup": "^0.28.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.0",
     "formik": "^2.1.4",
     "isomorphic-unfetch": "3.0.0",
